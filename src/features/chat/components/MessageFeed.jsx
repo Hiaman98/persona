@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
 
 export default function MessageFeed({
@@ -5,6 +6,18 @@ export default function MessageFeed({
   onEditMessage,
   onRegenerateMessage,
 }) {
+  const feedRef = useRef(null);
+
+  // Auto-scroll to bottom of the feed when messages update (e.g. during token streaming)
+  useEffect(() => {
+    if (feedRef.current) {
+      feedRef.current.scrollTo({
+        top: feedRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
+
   // Empty state handling matching the reference screenshot
   if (messages.length === 0) {
     return (
@@ -29,7 +42,7 @@ export default function MessageFeed({
         </div>
 
         {/* Reference Screen Typography */}
-        <h4 className="text-xl font-bold text-[#37312d] tracking-tight mb-2">
+        <h4 className="text-xl font-bold text-[var(--text-main)] tracking-tight mb-2">
           How can I help you today?
         </h4>
         <p className="text-xs text-gray-400 font-sans tracking-wide leading-relaxed">
@@ -40,7 +53,10 @@ export default function MessageFeed({
   }
 
   return (
-    <section className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar bg-[var(--bg-primary)]">
+    <section
+      ref={feedRef}
+      className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar bg-[var(--bg-primary)]"
+    >
       <div className="max-w-3xl mx-auto flex flex-col gap-6">
         {messages.map((msg) => (
           <MessageBubble

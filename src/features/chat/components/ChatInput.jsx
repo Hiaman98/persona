@@ -34,7 +34,7 @@ export default function ChatInput({
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={isGenerating ? "Awaiting connection stream..." : "Type a message..."}
-            className="flex-1 bg-transparent border-0 focus:outline-none text-sm text-[#37312d] resize-none max-h-32 py-2.5 font-sans placeholder-gray-400 custom-scrollbar"
+            className="flex-1 bg-transparent border-0 focus:outline-none text-sm text-[var(--text-main)] resize-none max-h-32 py-2.5 font-sans placeholder-gray-400 custom-scrollbar"
             disabled={isGenerating}
           />
 
