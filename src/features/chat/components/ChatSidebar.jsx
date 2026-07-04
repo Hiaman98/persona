@@ -21,10 +21,10 @@ export default function ChatSidebar({
       <div className="h-16 border-b border-[var(--border-color)] flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="h-7 w-7 rounded-full bg-accent-dynamic shadow-accent-glow flex items-center justify-center font-black text-white text-xs select-none">
-            AI
+            DM
           </div>
           <span className="text-xs font-bold font-mono tracking-widest text-[var(--text-main)]">
-            PERSONA CHAT
+            DEV MENTOR CHAT
           </span>
         </div>
         <button

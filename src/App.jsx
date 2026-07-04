@@ -11,8 +11,8 @@ import "./App.css";
 export default function App() {
   const { theme } = useTheme();
   
-  // Model state (activePersonaId): coder | shell | creative | generalist
-  const [activePersonaId, setActivePersonaId] = useState("coder");
+  // Model state (activePersonaId): hitesh | piyush
+  const [activePersonaId, setActivePersonaId] = useState("hitesh");
 
   // Custom hook manages database states, streaming callbacks, and routing
   const {
@@ -34,10 +34,10 @@ export default function App() {
   // Local shell UI state (not tied to logic)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const activePersona = PERSONAS[activePersonaId] || PERSONAS.coder;
+  const activePersona = PERSONAS[activePersonaId] || PERSONAS.hitesh;
 
   return (
-    <div className={`theme-${theme} h-screen w-full bg-[var(--bg-primary)] flex overflow-hidden relative text-[var(--text-main)] font-sans`}>
+    <div className={`theme-${theme} persona-${activePersonaId} h-screen w-full bg-[var(--bg-primary)] flex overflow-hidden relative text-[var(--text-main)] font-sans`}>
       {/* Soft Purple Background Glowing Disk */}
       <div className="absolute top-10 left-10 w-96 h-96 accent-glow-bg opacity-40"></div>
 
@@ -59,7 +59,6 @@ export default function App() {
           setIsSidebarOpen={setIsSidebarOpen}
           activePersonaId={activePersonaId}
           onPersonaChange={setActivePersonaId}
-          onReset={() => resetChat(activePersonaId)}
         />
 
         <MessageFeed

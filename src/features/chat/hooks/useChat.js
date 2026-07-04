@@ -22,38 +22,40 @@ function setChatIdInUrl(id) {
 const INITIAL_CHATS = [
   {
     id: "chat_1",
-    title: "React 19 Server Components",
+    title: "Mastering Closures (Chai aur Code)",
     date: "Just now",
     messages: [
       {
         id: "m1",
         role: "user",
-        text: "Can you explain the main benefits of React 19's Server Actions?",
+        text: "Hey Hitesh, I always get confused with closures. Can you explain in simple terms?",
         timestamp: "18:24",
       },
       {
         id: "m2",
         role: "assistant",
-        text: "React 19 Server Actions allow you to define server-side asynchronous operations and bind them directly to UI forms. Key benefits include:\n\n1. **Zero Endpoint Boilerplate**: You no longer need to write manual REST or GraphQL endpoints for simple form actions.\n2. **Pending States**: Native hook integrations like `useActionState` manage pending transitions and loading indicators automatically.\n3. **Optimistic Updates**: Using `useOptimistic`, you can predictively update the client state before the server response completes, creating a snappy user experience.",
+        text: "Hey what's up everyone, Hitesh here! Grab a hot cup of chai ☕ and let's break it down.\n\nA closure is simply a function that remembers its outer variables (lexical scope) even after the outer function has finished executing. Think of it like a memory capsule that the function carries around.\n\nLet's write a simple example:\n\n```javascript\nfunction makeChaiCounter() {\n  let count = 0; // local variable\n  return function() {\n    count++;\n    return `You have had ${count} cups of chai ☕`;\n  };\n}\n\nconst counter = makeChaiCounter();\nconsole.log(counter()); // \"You have had 1 cups of chai ☕\"\nconsole.log(counter()); // \"You have had 2 cups of chai ☕\"\n```\nSee? The inner function retains access to `count` even though `makeChaiCounter` has returned. Simple and clean! Go ahead and test it out.",
+        avatar: "HC",
         timestamp: "18:25",
       },
     ],
   },
   {
     id: "chat_2",
-    title: "Glassmorphism CSS Design",
+    title: "Node.js Rate Limiter (Piyush Garg)",
     date: "2 hours ago",
     messages: [
       {
         id: "m3",
         role: "user",
-        text: "What makes glassmorphism look premium?",
+        text: "Piyush, how do we implement a robust rate-limiting middleware in Express?",
         timestamp: "16:10",
       },
       {
         id: "m4",
         role: "assistant",
-        text: "Glassmorphism looks premium when you combine four core layers:\n\n1. **Translucency**: Low opacity background (e.g. `rgba(255, 255, 255, 0.05)`).\n2. **Blurring**: Deep backdrop-filter blur (e.g. `backdrop-filter: blur(16px)`).\n3. **Border Outline**: A thin border with variable opacity matching light source direction.\n4. **Shadow**: Soft, high-diffusion shadows.",
+        text: "Hey guys, welcome back. Rate limiting is crucial for preventing DDoS and brute force attacks in production. In Express, we can use `express-rate-limit` or write a custom middleware powered by Redis for distributed systems.\n\nHere is a clean custom middleware snippet using memory cache:\n\n```javascript\nconst rateLimit = {};\n\nexport const rateLimiter = (limit, windowMs) => {\n  return (req, res, next) => {\n    const ip = req.ip;\n    if (!rateLimit[ip]) {\n      rateLimit[ip] = { count: 0, startTime: Date.now() };\n    }\n\n    const data = rateLimit[ip];\n    if (Date.now() - data.startTime > windowMs) {\n      data.count = 1;\n      data.startTime = Date.now();\n      return next();\n    }\n\n    data.count++;\n    if (data.count > limit) {\n      return res.status(429).json({\n        error: 'Too many requests. Please try again later.'\n      });\n    }\n    next();\n  };\n};\n```\n\nFor high-scale apps, we'd replace the in-memory object `rateLimit` with Redis commands like `MULTI`, `INCR`, and `EXPIRE`. Let me know if you want to implement the Redis approach!",
+        avatar: "PG",
         timestamp: "16:11",
       },
     ],
@@ -121,7 +123,7 @@ export function useChat(activePersonaId) {
   // Start new chat session
   const createNewChat = (personaId) => {
     const newId = `chat_${Date.now()}`;
-    const persona = PERSONAS[personaId] || PERSONAS.coder;
+    const persona = PERSONAS[personaId] || PERSONAS.hitesh;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
 
     const newChat = {
@@ -133,6 +135,7 @@ export function useChat(activePersonaId) {
           id: `welcome_${Date.now()}`,
           role: "assistant",
           text: persona.welcomeMessage,
+          avatar: persona.avatar,
           timestamp,
         },
       ],
@@ -147,7 +150,7 @@ export function useChat(activePersonaId) {
   const resetChat = (personaId) => {
     if (!activeChatId) return;
 
-    const persona = PERSONAS[personaId] || PERSONAS.coder;
+    const persona = PERSONAS[personaId] || PERSONAS.hitesh;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
 
     setChats((prev) =>
@@ -161,6 +164,7 @@ export function useChat(activePersonaId) {
                 id: `welcome_${Date.now()}`,
                 role: "assistant",
                 text: persona.welcomeMessage,
+                avatar: persona.avatar,
                 timestamp,
               },
             ],
@@ -199,6 +203,7 @@ export function useChat(activePersonaId) {
       id: assistantMsgId,
       role: "assistant",
       text: "",
+      avatar: PERSONAS[personaId]?.avatar || "HC",
       timestamp,
     };
 
@@ -283,6 +288,7 @@ export function useChat(activePersonaId) {
       id: assistantMsgId,
       role: "assistant",
       text: "",
+      avatar: PERSONAS[personaId]?.avatar || "HC",
       timestamp,
     };
 
@@ -365,6 +371,7 @@ export function useChat(activePersonaId) {
       id: assistantMsgId,
       role: "assistant",
       text: "",
+      avatar: PERSONAS[personaId]?.avatar || "HC",
       timestamp,
     };
 

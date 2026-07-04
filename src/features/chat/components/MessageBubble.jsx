@@ -95,7 +95,7 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
             : "bg-[var(--avatar-assistant-bg)] text-[var(--avatar-assistant-text)] shadow-accent-glow"
         }`}
       >
-        {isUser ? "U" : "A"}
+        {isUser ? "U" : (message.avatar || "A")}
       </div>
 
       {/* Message Body & Controls */}

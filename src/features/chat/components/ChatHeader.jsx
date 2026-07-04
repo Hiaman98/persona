@@ -3,7 +3,6 @@ export default function ChatHeader({
   setIsSidebarOpen,
   activePersonaId,
   onPersonaChange,
-  onReset,
 }) {
   return (
     <header className="h-16 border-b border-[var(--border-color)] flex items-center justify-between px-4 sm:px-6 bg-[var(--header-bg)] backdrop-blur-md shrink-0 z-10">
@@ -32,28 +31,18 @@ export default function ChatHeader({
         </div>
       </div>
 
-      {/* Model Selection Dropdown & System Reset */}
+      {/* Model Selection Dropdown */}
       <div className="flex items-center gap-3">
         {/* Screenshot Styled Model Selector Pill */}
         <select
           value={activePersonaId}
           onChange={(e) => onPersonaChange(e.target.value)}
           className="bg-[var(--input-bg)] border border-[var(--border-color)] text-xs font-semibold text-[var(--text-main)] rounded-full px-4 py-1.5 focus:outline-none cursor-pointer shadow-sm hover:border-accent-dynamic transition-all"
-          title="Switch AI model persona"
+          title="Switch Educator Persona"
         >
-          <option value="coder">🤖 Antigravity-Coder</option>
-          <option value="shell">💻 Cyber-Shell Console</option>
-          <option value="creative">✍️ Aero-Creative Writer</option>
-          <option value="generalist">🧠 Nexus Knowledge Engine</option>
+          <option value="hitesh">☕ Hitesh Choudhary (Chai aur Code)</option>
+          <option value="piyush">💻 Piyush Garg (System Design)</option>
         </select>
-
-        <button
-          onClick={onReset}
-          className="text-[10px] font-mono text-[var(--text-main)] hover:opacity-85 bg-[var(--reset-bg)] border border-[var(--border-color)] hover:border-accent-dynamic px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm"
-          title="Reset conversation log"
-        >
-          RESET SYSTEM
-        </button>
       </div>
     </header>
   );

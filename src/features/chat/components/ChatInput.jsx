@@ -54,7 +54,7 @@ export default function ChatInput({
         {/* Screenshot Style Footer metadata details */}
         <div className="flex items-center gap-3 mt-2 px-3 text-[10px] font-mono text-gray-400 select-none">
           <div className="bg-[var(--input-bg)] border border-[var(--border-color)] px-2.5 py-1 rounded-full text-[var(--text-main)] opacity-70 shadow-sm font-semibold">
-            {activePersona?.name || "Antigravity-Coder"}
+            {activePersona?.name || "Hitesh Choudhary"}
           </div>
           <span>Shift + Enter for new line</span>
         </div>

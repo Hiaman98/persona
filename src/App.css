@@ -156,3 +156,10 @@ body {
 .typing-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+/* Custom background animations/glows representing theme differences */
+.accent-glow-bg {
+  border-radius: 50%;
+  filter: blur(100px);
+  background-color: var(--accent-color);
+  transition: background-color 0.5s ease;
+}
