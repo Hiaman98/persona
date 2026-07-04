@@ -1,5 +1,3 @@
-import { useTheme } from "@/context/ThemeContext";
-
 export default function ChatSidebar({
   isSidebarOpen,
   setIsSidebarOpen,
@@ -9,27 +7,25 @@ export default function ChatSidebar({
   onNewChat,
   onDeleteChat,
 }) {
-  const { theme, setTheme } = useTheme();
-
   return (
     <aside
-      className={`glass-panel border-r border-white/5 flex flex-col shrink-0 transition-all duration-300 z-20 ${
+      className={`glass-panel border-r border-[#e2d5f0] flex flex-col shrink-0 transition-all duration-300 z-20 ${
         isSidebarOpen ? "w-72" : "w-0 -translate-x-full lg:w-0"
       } relative h-full`}
     >
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-white/5 flex items-center justify-between">
+      <div className="p-4 border-b border-[#e2d5f0] flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="h-7 w-7 rounded-lg bg-accent-dynamic shadow-accent-glow flex items-center justify-center font-black text-black text-xs">
-            P
+          <div className="h-7 w-7 rounded-full bg-accent-dynamic shadow-accent-glow flex items-center justify-center font-black text-white text-xs select-none">
+            AI
           </div>
-          <span className="text-xs font-bold font-mono tracking-widest text-white">
+          <span className="text-xs font-bold font-mono tracking-widest text-[#2e1065]">
             PERSONA CHAT
           </span>
         </div>
         <button
           onClick={() => setIsSidebarOpen(false)}
-          className="text-gray-400 hover:text-white transition-colors cursor-pointer lg:hidden p-1 rounded hover:bg-white/5"
+          className="text-gray-400 hover:text-[#2e1065] transition-colors cursor-pointer lg:hidden p-1 rounded hover:bg-black/5"
           title="Collapse Sidebar"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -42,10 +38,10 @@ export default function ChatSidebar({
       <div className="p-3">
         <button
           onClick={onNewChat}
-          className="w-full glass-panel-light hover:border-accent-dynamic text-xs font-semibold text-white py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer border border-white/5"
+          className="w-full bg-white/40 hover:bg-white/80 border border-[#e2d5f0] hover:border-accent-dynamic text-xs font-semibold text-gray-700 hover:text-gray-900 py-2.5 px-4 rounded-full flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
           title="Start a new chat session"
         >
-          <svg className="w-4 h-4 text-accent-dynamic" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-accent-dynamic" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
           <span>New Session</span>
@@ -54,29 +50,29 @@ export default function ChatSidebar({
 
       {/* History Log Items */}
       <div className="flex-1 overflow-y-auto px-2 pb-4 custom-scrollbar space-y-1">
-        <span className="block text-[10px] font-mono text-gray-500 tracking-widest uppercase px-3 py-2 select-none">
+        <span className="block text-[10px] font-mono text-gray-400 tracking-widest uppercase px-3 py-2 select-none">
           History Logs
         </span>
         {chats.length === 0 ? (
-          <p className="text-[10px] text-gray-600 font-mono italic px-3 py-1 select-none">
+          <p className="text-[10px] text-gray-400 font-mono italic px-3 py-1 select-none">
             No history logs found.
           </p>
         ) : (
           chats.map((c) => (
             <div
               key={c.id}
-              className="group/item relative w-full flex items-center"
+              className="group/item relative w-full flex items-center px-1"
             >
               <button
                 onClick={() => setActiveChatId(c.id)}
                 className={`w-full text-left rounded-xl py-2.5 pl-3 pr-8 transition-all flex flex-col gap-0.5 cursor-pointer border ${
                   activeChatId === c.id
-                    ? "bg-white/5 border-white/5 text-accent-dynamic shadow-sm"
-                    : "hover:bg-white/5 text-gray-400 border-transparent"
+                    ? "sidebar-item-active border-transparent"
+                    : "sidebar-item-hover text-gray-600 border-transparent"
                 }`}
               >
-                <span className="text-xs font-medium truncate text-white">{c.title}</span>
-                <span className="text-[10px] font-mono text-gray-500">{c.date}</span>
+                <span className="text-xs font-medium truncate">{c.title}</span>
+                <span className="text-[9px] font-mono opacity-65">{c.date}</span>
               </button>
 
               {/* Session Delete Trigger */}
@@ -85,7 +81,7 @@ export default function ChatSidebar({
                   e.stopPropagation();
                   onDeleteChat?.(c.id);
                 }}
-                className="absolute right-2.5 opacity-0 group-hover/item:opacity-100 p-1.5 text-gray-500 hover:text-red-400 transition-all rounded hover:bg-white/10 cursor-pointer"
+                className="absolute right-3.5 opacity-0 group-hover/item:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-all rounded hover:bg-black/5 cursor-pointer"
                 title="Delete chat session"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -97,27 +93,9 @@ export default function ChatSidebar({
         )}
       </div>
 
-      {/* Footer Accent Theme Switcher */}
-      <div className="p-4 border-t border-white/5 bg-black/10 flex items-center justify-between shrink-0">
-        <span className="text-[10px] font-mono text-gray-500 select-none">ACCENT THEME</span>
-        <div className="glass-panel p-1 rounded-lg border border-white/10 flex items-center gap-1">
-          {["purple", "green", "pink", "blue"].map((t) => (
-            <button
-              key={t}
-              onClick={() => setTheme(t)}
-              className={`h-5 w-5 rounded flex items-center justify-center transition-all ${
-                theme === t ? "bg-white/15" : "hover:bg-white/5"
-              }`}
-              title={`Switch theme: ${t}`}
-            >
-              <span className={`h-2 w-2 rounded-full ${
-                t === "purple" ? "bg-purple-400" :
-                t === "green" ? "bg-green-400" :
-                t === "pink" ? "bg-pink-400" : "bg-blue-400"
-              }`}></span>
-            </button>
-          ))}
-        </div>
+      {/* Footer System Indicator - No Switcher */}
+      <div className="p-4 border-t border-[#e2d5f0] bg-black/5 flex items-center justify-center shrink-0">
+        <span className="text-[10px] font-mono text-gray-400 select-none">BLUEBERRY EDITION</span>
       </div>
     </aside>
   );

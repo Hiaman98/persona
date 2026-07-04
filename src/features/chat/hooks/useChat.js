@@ -121,7 +121,7 @@ export function useChat(activePersonaId) {
   // Start new chat session
   const createNewChat = (personaId) => {
     const newId = `chat_${Date.now()}`;
-    const persona = PERSONAS[personaId] || PERSONAS.purple;
+    const persona = PERSONAS[personaId] || PERSONAS.coder;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
 
     const newChat = {
@@ -147,7 +147,7 @@ export function useChat(activePersonaId) {
   const resetChat = (personaId) => {
     if (!activeChatId) return;
 
-    const persona = PERSONAS[personaId] || PERSONAS.purple;
+    const persona = PERSONAS[personaId] || PERSONAS.coder;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
 
     setChats((prev) =>

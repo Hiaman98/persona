@@ -1,37 +1,33 @@
 export const PERSONAS = {
-  purple: {
-    id: "purple",
+  coder: {
+    id: "coder",
     name: "Antigravity-Coder",
     title: "SYSTEM CODING ASSISTANT",
     avatar: "C",
-    theme: "purple",
     systemPrompt: "A specialized React & Tailwind assistant that responds with code snippets.",
     welcomeMessage: "System initialized. How can I assist you with React, Tailwind CSS, or coding logic today?",
   },
-  green: {
-    id: "green",
+  shell: {
+    id: "shell",
     name: "Cyber-Shell",
     title: "SECURE CONSOLE SHELL",
     avatar: "S",
-    theme: "green",
     systemPrompt: "A terminal interface simulation that responds with system status output.",
     welcomeMessage: "root@cyber_shell:~$ ready. Enter console instruction parameters.",
   },
-  pink: {
-    id: "pink",
+  creative: {
+    id: "creative",
     name: "Aero-Creative",
     title: "MARKETING & COPY WRITER",
     avatar: "W",
-    theme: "pink",
     systemPrompt: "A literary creative helper that generates slogans, descriptions, and copy drafts.",
     welcomeMessage: "Greetings. Let us weave some words. What project or creative draft are we brainstorming?",
   },
-  blue: {
-    id: "blue",
+  generalist: {
+    id: "generalist",
     name: "Nexus-Generalist",
     title: "KNOWLEDGE ENGINE",
     avatar: "N",
-    theme: "blue",
     systemPrompt: "A balanced general purpose AI assistant.",
     welcomeMessage: "Hello! I am Nexus. Ask me anything, and I'll help you compile an answer.",
   },
@@ -40,19 +36,18 @@ export const PERSONAS = {
 // Generates simulated context-aware outputs
 export function getMockResponse(personaId, userMessageText) {
   const query = userMessageText.toLowerCase().trim();
-  const persona = PERSONAS[personaId] || PERSONAS.purple;
 
-  if (personaId === "purple") {
+  if (personaId === "coder") {
     if (query.includes("hello") || query.includes("hi")) {
       return "Hello! I'm your React developer assistant. I can help write hooks, build layouts, or refactor logic. What are we building?";
     }
     if (query.includes("react") || query.includes("hook")) {
       return "Here is a clean custom React hook to track window dimensions:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport function useWindowSize() {\n  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight });\n\n  useEffect(() => {\n    const handleResize = () => setSize({ width: window.innerWidth, height: window.innerHeight });\n    window.addEventListener('resize', handleResize);\n    return () => window.removeEventListener('resize', handleResize);\n  }, []);\n\n  return size;\n}\n```";
     }
-    return `I have analyzed your prompt: "${userMessageText}". Here is a clean boilerplate snippet for this feature:\n\n\`\`\`jsx\nexport default function Module() {\n  return (\n    <div className="p-4 bg-white/5 rounded-xl border border-white/10">\n      <h4 className="text-accent-dynamic font-bold">Execution Ready</h4>\n    </div>\n  );\n}\n\`\`\``;
+    return `I have analyzed your prompt: "${userMessageText}". Here is a clean boilerplate snippet for this feature:\n\n\`\`\`jsx\nexport default function Module() {\n  return (\n    <div className="p-4 bg-white/5 rounded-xl border border-[#e6e2d8]">\n      <h4 className="text-accent-dynamic font-bold">Execution Ready</h4>\n    </div>\n  );\n}\n\`\`\``;
   }
 
-  if (personaId === "green") {
+  if (personaId === "shell") {
     if (query.includes("hello") || query.includes("hi")) {
       return "kernel init: core shell system listening.\nIP: 127.0.0.1\nPORT: 5173\nSTATUS: ONLINE";
     }
@@ -62,7 +57,7 @@ export function getMockResponse(personaId, userMessageText) {
     return `root@cyber_shell:~$ exec "${userMessageText}"\nAnalyzing directive logs...\nCOMPILATION: SUCCESS\nEXEC_TIME: 0.08ms\n[Operation completed successfully.]`;
   }
 
-  if (personaId === "pink") {
+  if (personaId === "creative") {
     if (query.includes("hello") || query.includes("hi")) {
       return "Welcome. Let's make something memorable. Give me a core concept, and I'll draft some words for you.";
     }
@@ -72,7 +67,7 @@ export function getMockResponse(personaId, userMessageText) {
     return `Draft concept based on: "${userMessageText}":\n\n*"In the quiet space where code meets user experience, true design behaves like gravity: completely silent, highly functional, and impossible to ignore."*`;
   }
 
-  // default / blue generalist
+  // default / generalist
   if (query.includes("hello") || query.includes("hi")) {
     return "Hi there! I'm Nexus, a generalist assistant. How can I help you learn, debug, or write today?";
   }

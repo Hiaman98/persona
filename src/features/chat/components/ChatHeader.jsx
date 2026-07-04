@@ -1,17 +1,18 @@
 export default function ChatHeader({
   isSidebarOpen,
   setIsSidebarOpen,
-  activePersona,
+  activePersonaId,
+  onPersonaChange,
   onReset,
 }) {
   return (
-    <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 sm:px-6 bg-black/20 backdrop-blur-sm shrink-0">
+    <header className="h-16 border-b border-[#e2d5f0] flex items-center justify-between px-4 sm:px-6 bg-white/60 backdrop-blur-md shrink-0 z-10">
       <div className="flex items-center gap-3">
         {/* Toggle Sidebar when collapsed */}
         {!isSidebarOpen && (
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-400 hover:text-white transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-white/5 border border-white/5 mr-1"
+            className="text-gray-400 hover:text-[#2e1065] transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-black/5 border border-[#e2d5f0] mr-1"
             title="Expand History"
           >
             <svg className="w-5 h-5 text-accent-dynamic" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -22,23 +23,33 @@ export default function ChatHeader({
 
         {/* Persona Identity Details */}
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-white font-mono uppercase tracking-wider">
-              {activePersona?.name || "Antigravity-Coder"}
-            </h3>
-            <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          </div>
-          <p className="text-[10px] text-gray-500 font-mono">
-            {activePersona?.title || "ACTIVE SYSTEM PERSONA"}
+          <h3 className="text-sm font-bold text-[#2e1065] font-mono tracking-wide uppercase">
+            Active Workspace
+          </h3>
+          <p className="text-[10px] text-gray-400 font-mono">
+            SECURE CLIENT CHANNEL
           </p>
         </div>
       </div>
 
-      {/* Header Actions */}
-      <div className="flex items-center gap-2">
+      {/* Model Selection Dropdown & System Reset */}
+      <div className="flex items-center gap-3">
+        {/* Screenshot Styled Model Selector Pill */}
+        <select
+          value={activePersonaId}
+          onChange={(e) => onPersonaChange(e.target.value)}
+          className="bg-white border border-[#e2d5f0] text-xs font-semibold text-[#2e1065] rounded-full px-4 py-1.5 focus:outline-none cursor-pointer shadow-sm hover:border-accent-dynamic transition-all"
+          title="Switch AI model persona"
+        >
+          <option value="coder">🤖 Antigravity-Coder</option>
+          <option value="shell">💻 Cyber-Shell Console</option>
+          <option value="creative">✍️ Aero-Creative Writer</option>
+          <option value="generalist">🧠 Nexus Knowledge Engine</option>
+        </select>
+
         <button
           onClick={onReset}
-          className="text-[10px] font-mono text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+          className="text-[10px] font-mono text-gray-500 hover:text-gray-900 bg-white/40 hover:bg-white/80 border border-[#e2d5f0] hover:border-accent-dynamic px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm"
           title="Reset conversation log"
         >
           RESET SYSTEM

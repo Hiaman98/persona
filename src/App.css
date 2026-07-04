@@ -1,126 +1,28 @@
 @import "tailwindcss";
 
-@theme {
-  --color-accent-purple: #a855f7;
-  --color-accent-green: #22c55e;
-  --color-accent-pink: #ec4899;
-  --color-accent-blue: #3b82f6;
-}
-
 :root {
-  --accent-color: #a855f7;
-  --accent-glow: rgba(168, 85, 247, 0.2);
-  --bg-gradient-start: #040408;
-  --bg-gradient-end: #010103;
-}
-
-.theme-purple {
-  --accent-color: #a855f7;
-  --accent-glow: rgba(168, 85, 247, 0.2);
-}
-
-.theme-green {
-  --accent-color: #22c55e;
-  --accent-glow: rgba(34, 197, 94, 0.2);
-}
-
-.theme-pink {
-  --accent-color: #ec4899;
-  --accent-glow: rgba(236, 72, 153, 0.2);
-}
-
-.theme-blue {
-  --accent-color: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.2);
+  --accent-color: #6d28d9;         /* Vibrant Blueberry Purple */
+  --accent-glow: rgba(109, 40, 217, 0.12);
+  --bg-primary: #faf8fd;           /* Pale Lilac/Lavender White */
+  --bg-sidebar: #f3ebf7;           /* Soft Lavender-Beige Sidebar */
+  --text-main: #2e1065;            /* Dark Grape/Charcoal Purple */
+  --text-secondary: #6d28d9;       /* Blueberry Purple */
+  --border-color: #e2d5f0;         /* Soft Lavender Border line */
 }
 
 body {
-  background-color: var(--bg-gradient-start);
-  color: #f3f4f6;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   overflow: hidden;
   height: 100vh;
   margin: 0;
 }
 
-/* cybernetic digital grid */
-.cyber-grid {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* Background Glowing Accents */
-.accent-glow-bg {
-  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  filter: blur(100px);
-  pointer-events: none;
-  z-index: 0;
-  transition: background 0.5s ease;
-}
-
-/* Glassmorphism panels */
-.glass-panel {
-  background: rgba(10, 10, 18, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.glass-panel-light {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-/* Messages styling */
-.user-bubble {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom-right-radius: 4px;
-}
-
-.user-bubble:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.assistant-bubble {
-  background: rgba(10, 10, 18, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-bottom-left-radius: 4px;
-}
-
-.assistant-bubble:hover {
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-/* Dynamic Accent Styles */
-.text-accent-dynamic {
-  color: var(--accent-color);
-  transition: color 0.3s ease;
-}
-
-.bg-accent-dynamic {
-  background-color: var(--accent-color);
-  transition: background-color 0.3s ease;
-}
-
-.border-accent-dynamic {
-  border-color: var(--accent-color);
-  transition: border-color 0.3s ease;
-}
-
-.shadow-accent-glow {
-  box-shadow: 0 0 25px 2px var(--accent-glow);
-  transition: box-shadow 0.3s ease;
-}
-
-/* Webkit Scrollbars for scrolling lists */
+/* Styled Scrollbars matching lavender */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -128,22 +30,80 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 3px;
+  background: #dbceed;
+  border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--accent-color);
 }
 
-/* Typing indicator pulses */
-@keyframes typing-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+/* Sidebar layout classes */
+.glass-panel {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+}
+
+/* Active Session item */
+.sidebar-item-active {
+  background-color: #e5d5f2;
+  color: var(--accent-color) !important;
+  font-weight: 600;
+  border: 1px solid rgba(109, 40, 217, 0.15);
+}
+
+/* Sidebar item hover */
+.sidebar-item-hover:hover {
+  background-color: #ece0f6;
+  color: var(--text-main);
+}
+
+/* Message Bubble Colors */
+.user-bubble {
+  background-color: #ebdcf7;
+  color: var(--text-main);
+  border: 1px solid #dfc9f2;
+  border-bottom-right-radius: 4px;
+}
+
+.user-bubble:hover {
+  background-color: #dfc9f2;
+}
+
+.assistant-bubble {
+  background-color: transparent;
+  color: var(--text-main);
+  border-bottom-left-radius: 4px;
+}
+
+/* Dynamic Accent Styles mapping to purple variables */
+.text-accent-dynamic {
+  color: var(--accent-color);
+  transition: color 0.2s ease;
+}
+
+.bg-accent-dynamic {
+  background-color: var(--accent-color);
+  transition: background-color 0.2s ease;
+}
+
+.border-accent-dynamic {
+  border-color: var(--accent-color);
+  transition: border-color 0.2s ease;
+}
+
+.shadow-accent-glow {
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Typing pulse animation */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-4px); }
 }
 
 .typing-dot {
-  animation: typing-pulse 1.2s infinite ease-in-out;
+  animation: dot-pulse 1.2s infinite ease-in-out;
 }
 
 .typing-dot:nth-child(2) {

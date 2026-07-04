@@ -5,25 +5,42 @@ export default function MessageFeed({
   onEditMessage,
   onRegenerateMessage,
 }) {
-  // Empty state handling
+  // Empty state handling matching the reference screenshot
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-gray-500 max-w-md mx-auto h-full select-none animate-pulse-slow">
-        <div className="h-12 w-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-4 text-accent-dynamic">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-lg mx-auto h-full select-none animate-pulse-slow">
+        {/* Minimalist Robot Icon from screenshot */}
+        <div className="h-14 w-14 mb-5 flex items-center justify-center text-accent-dynamic">
+          <svg className="w-12 h-12" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5">
+            {/* Robot Head */}
+            <rect x="12" y="18" width="24" height="18" rx="4" className="stroke-accent-dynamic" />
+            {/* Robot Ears */}
+            <rect x="8" y="24" width="4" height="6" rx="1" className="fill-accent-dynamic stroke-accent-dynamic" />
+            <rect x="36" y="24" width="4" height="6" rx="1" className="fill-accent-dynamic stroke-accent-dynamic" />
+            {/* Robot Antenna */}
+            <line x1="24" y1="18" x2="24" y2="12" className="stroke-accent-dynamic" />
+            <circle cx="24" cy="10" r="3" className="fill-accent-dynamic stroke-accent-dynamic" />
+            {/* Robot Eyes */}
+            <circle cx="19" cy="25" r="2.5" className="fill-accent-dynamic stroke-accent-dynamic" />
+            <circle cx="29" cy="25" r="2.5" className="fill-accent-dynamic stroke-accent-dynamic" />
+            {/* Robot Mouth */}
+            <path d="M19 31h10" strokeLinecap="round" className="stroke-accent-dynamic" />
           </svg>
         </div>
-        <h4 className="text-sm font-semibold text-white font-mono uppercase tracking-wider mb-1">System Idle</h4>
-        <p className="text-xs text-gray-500 leading-relaxed font-sans">
-          No logs found in this channel. Send a prompt to establish a connection and begin streaming responses.
+
+        {/* Reference Screen Typography */}
+        <h4 className="text-xl font-bold text-[#37312d] tracking-tight mb-2">
+          How can I help you today?
+        </h4>
+        <p className="text-xs text-gray-400 font-sans tracking-wide leading-relaxed">
+          Start a conversation and the AI will respond in real time.
         </p>
       </div>
     );
   }
 
   return (
-    <section className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar">
+    <section className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar bg-[#fbfaf7]">
       <div className="max-w-3xl mx-auto flex flex-col gap-6">
         {messages.map((msg) => (
           <MessageBubble

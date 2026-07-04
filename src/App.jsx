@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTheme } from "@/context/ThemeContext";
 import { useChat } from "@/features/chat/hooks/useChat";
 import { PERSONAS } from "@/features/chat/api/mockChatApi";
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
@@ -9,8 +8,9 @@ import ChatInput from "@/features/chat/components/ChatInput";
 import "./App.css";
 
 export default function App() {
-  const { theme } = useTheme();
-  
+  // Model state (activePersonaId): coder | shell | creative | generalist
+  const [activePersonaId, setActivePersonaId] = useState("coder");
+
   // Custom hook manages database states, streaming callbacks, and routing
   const {
     chats,
@@ -26,18 +26,17 @@ export default function App() {
     editMessage,
     regenerateMessage,
     deleteChat,
-  } = useChat(theme);
+  } = useChat(activePersonaId);
 
   // Local shell UI state (not tied to logic)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const activePersona = PERSONAS[theme] || PERSONAS.purple;
+  const activePersona = PERSONAS[activePersonaId] || PERSONAS.coder;
 
   return (
-    <div className={`theme-${theme} h-screen w-full bg-gradient-to-br from-[#06060c] via-[#090912] to-[#010103] cyber-grid flex overflow-hidden relative`}>
-      {/* Dynamic Glowing Accent Background Circles */}
-      <div className="absolute top-10 left-10 w-96 h-96 accent-glow-bg opacity-30"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 accent-glow-bg opacity-20"></div>
+    <div className="theme-purple h-screen w-full bg-[var(--bg-primary)] flex overflow-hidden relative text-[var(--text-main)] font-sans">
+      {/* Soft Purple Background Glowing Disk */}
+      <div className="absolute top-10 left-10 w-96 h-96 accent-glow-bg opacity-40"></div>
 
       {/* Collapsible history sidebar */}
       <ChatSidebar
@@ -46,7 +45,7 @@ export default function App() {
         chats={chats}
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
-        onNewChat={() => createNewChat(theme)}
+        onNewChat={() => createNewChat(activePersonaId)}
         onDeleteChat={deleteChat}
       />
 
@@ -55,21 +54,23 @@ export default function App() {
         <ChatHeader
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
-          activePersona={activePersona}
-          onReset={() => resetChat(theme)}
+          activePersonaId={activePersonaId}
+          onPersonaChange={setActivePersonaId}
+          onReset={() => resetChat(activePersonaId)}
         />
 
         <MessageFeed
           messages={messages}
-          onEditMessage={(msgId, newText) => editMessage(msgId, newText, theme)}
-          onRegenerateMessage={(msgId) => regenerateMessage(msgId, theme)}
+          onEditMessage={(msgId, newText) => editMessage(msgId, newText, activePersonaId)}
+          onRegenerateMessage={(msgId) => regenerateMessage(msgId, activePersonaId)}
         />
 
         <ChatInput
           value={inputValue}
           onChange={setInputValue}
-          onSubmit={() => sendMessage(inputValue, theme)}
+          onSubmit={() => sendMessage(inputValue, activePersonaId)}
           isGenerating={isGenerating}
+          activePersona={activePersona}
         />
       </div>
     </div>
