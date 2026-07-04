@@ -55,7 +55,11 @@ export default function App() {
           onReset={() => resetChat(theme)}
         />
 
-        <MessageFeed messages={messages} />
+        <MessageFeed
+          messages={messages}
+          onEditMessage={(msgId, newText) => editMessage(msgId, newText, theme)}
+          onRegenerateMessage={(msgId) => regenerateMessage(msgId, theme)}
+        />
 
         <ChatInput
           value={inputValue}

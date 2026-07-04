@@ -259,6 +259,168 @@ export function useChat(activePersonaId) {
     }, 600); // 600ms latency simulation
   };
 
+  const editMessage = (messageId, newText, personaId) => {
+    if (!newText.trim() || isGenerating) return;
+
+    const targetChatId = activeChatId || chats[0]?.id;
+    if (!targetChatId) return;
+
+    const chatIndex = chats.findIndex((c) => c.id === targetChatId);
+    if (chatIndex === -1) return;
+
+    const activeChat = chats[chatIndex];
+    const messageIndex = activeChat.messages.findIndex((m) => m.id === messageId);
+    if (messageIndex === -1) return;
+
+    const updatedUserMsg = {
+      ...activeChat.messages[messageIndex],
+      text: newText.trim(),
+    };
+
+    const assistantMsgId = `a_${Date.now()}`;
+    const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
+    const assistantMsg = {
+      id: assistantMsgId,
+      role: "assistant",
+      text: "",
+      timestamp,
+    };
+
+    // Slice history at the edited user message and append the new assistant placeholder
+    const truncatedMessages = [
+      ...activeChat.messages.slice(0, messageIndex),
+      updatedUserMsg,
+      assistantMsg,
+    ];
+
+    setChats((prev) =>
+      prev.map((c) => {
+        if (c.id === targetChatId) {
+          return {
+            ...c,
+            messages: truncatedMessages,
+          };
+        }
+        return c;
+      })
+    );
+
+    setIsGenerating(true);
+
+    if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+
+    setTimeout(() => {
+      const fullResponse = getMockResponse(personaId, newText);
+      const words = fullResponse.split(" ");
+      let currentWordIndex = 0;
+      let streamedText = "";
+
+      streamIntervalRef.current = setInterval(() => {
+        if (currentWordIndex < words.length) {
+          streamedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
+          setChats((prev) =>
+            prev.map((c) => {
+              if (c.id === targetChatId) {
+                return {
+                  ...c,
+                  messages: c.messages.map((m) =>
+                    m.id === assistantMsgId ? { ...m, text: streamedText } : m
+                  ),
+                };
+              }
+              return c;
+            })
+          );
+          currentWordIndex++;
+        } else {
+          clearInterval(streamIntervalRef.current);
+          setIsGenerating(false);
+        }
+      }, 50);
+    }, 600);
+  };
+
+  const regenerateMessage = (messageId, personaId) => {
+    if (isGenerating) return;
+
+    const targetChatId = activeChatId || chats[0]?.id;
+    if (!targetChatId) return;
+
+    const chatIndex = chats.findIndex((c) => c.id === targetChatId);
+    if (chatIndex === -1) return;
+
+    const activeChat = chats[chatIndex];
+    const assistantIndex = activeChat.messages.findIndex((m) => m.id === messageId);
+    if (assistantIndex === -1) return;
+
+    // Retrieve preceding user prompt
+    const userIndex = assistantIndex - 1;
+    if (userIndex < 0 || activeChat.messages[userIndex].role !== "user") return;
+
+    const userPrompt = activeChat.messages[userIndex].text;
+
+    const assistantMsgId = `a_${Date.now()}`;
+    const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
+    const assistantMsg = {
+      id: assistantMsgId,
+      role: "assistant",
+      text: "",
+      timestamp,
+    };
+
+    // Slices history up to the assistant response to regenerate
+    const truncatedMessages = [
+      ...activeChat.messages.slice(0, assistantIndex),
+      assistantMsg,
+    ];
+
+    setChats((prev) =>
+      prev.map((c) => {
+        if (c.id === targetChatId) {
+          return {
+            ...c,
+            messages: truncatedMessages,
+          };
+        }
+        return c;
+      })
+    );
+
+    setIsGenerating(true);
+
+    if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+
+    setTimeout(() => {
+      const fullResponse = getMockResponse(personaId, userPrompt);
+      const words = fullResponse.split(" ");
+      let currentWordIndex = 0;
+      let streamedText = "";
+
+      streamIntervalRef.current = setInterval(() => {
+        if (currentWordIndex < words.length) {
+          streamedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
+          setChats((prev) =>
+            prev.map((c) => {
+              if (c.id === targetChatId) {
+                return {
+                  ...c,
+                  messages: c.messages.map((m) =>
+                    m.id === assistantMsgId ? { ...m, text: streamedText } : m
+                  ),
+                };
+              }
+              return c;
+            })
+          );
+          currentWordIndex++;
+        } else {
+          clearInterval(streamIntervalRef.current);
+          setIsGenerating(false);
+        }
+      }, 50);
+    }, 600);
+  };
+
   return {
     chats,
     activeChatId,
@@ -270,5 +432,7 @@ export function useChat(activePersonaId) {
     createNewChat,
     resetChat,
     sendMessage,
+    editMessage,
+    regenerateMessage,
   };
 }

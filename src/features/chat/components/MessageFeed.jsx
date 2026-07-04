@@ -1,6 +1,10 @@
 import MessageBubble from "./MessageBubble";
 
-export default function MessageFeed({ messages = [] }) {
+export default function MessageFeed({
+  messages = [],
+  onEditMessage,
+  onRegenerateMessage,
+}) {
   // Empty state handling
   if (messages.length === 0) {
     return (
@@ -22,7 +26,12 @@ export default function MessageFeed({ messages = [] }) {
     <section className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar">
       <div className="max-w-3xl mx-auto flex flex-col gap-6">
         {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble
+            key={msg.id}
+            message={msg}
+            onEdit={onEditMessage}
+            onRegenerate={onRegenerateMessage}
+          />
         ))}
       </div>
     </section>
