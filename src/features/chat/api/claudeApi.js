@@ -22,7 +22,30 @@ export async function* streamClaudeResponse(personaId, messages, signal) {
     dangerouslyAllowBrowser: true,
   });
 
-  const systemPrompt = PERSONAS[personaId]?.systemPrompt;
+  const persona = PERSONAS[personaId];
+  let systemPrompt = persona?.systemPrompt || "";
+
+  if (persona) {
+    const transcriptsText = (persona.youtubeTranscripts || [])
+      .map((t) => `- "${t}"`)
+      .join("\n\n");
+    const commentsText = (persona.socialComments || [])
+      .map((c) => `- "${c}"`)
+      .join("\n");
+
+    let referenceContext = "";
+    if (transcriptsText) {
+      referenceContext += `\n\nHere are reference transcripts of some of your YouTube videos (which may contain a mix of English, Hindi, and Hinglish). Use them to mimic your voice, phrasing, multilingual style, vocabulary, and topic explanation style, and refer to this knowledge when relevant:\n<youtube_transcripts>\n${transcriptsText}\n</youtube_transcripts>`;
+    }
+    if (commentsText) {
+      referenceContext += `\n\nHere are reference comments you posted on YouTube/Twitter/X (which may contain a mix of English, Hindi, and Hinglish). Mimic their writing style, vocabulary, code-switching, catchphrases, punctuation usage, and tone:\n<social_media_comments>\n${commentsText}\n</social_media_comments>`;
+    }
+
+    systemPrompt += referenceContext;
+
+    // Guide Hinglish / Code-Switching response patterns
+    systemPrompt += `\n\nLanguage & Style Instruction: You are fluent in English, Hindi, and Hinglish (the typical blend of Hindi and English used in Indian tech/developer communities). Analyze the reference transcripts and comments to understand how you naturally switch between languages (code-switching). Match the user's language style: if they write in Hinglish or Hindi, reply in your natural Hinglish/Hindi persona style. If they ask in English, reply in English but keep your iconic catchphrases, voice, and high-energy developer tone active.`;
+  }
 
   const stream = await anthropic.messages.create({
     model: "claude-opus-4-8",

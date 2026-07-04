@@ -133,6 +133,7 @@ export function useChat(activePersonaId) {
     const newId = `chat_${Date.now()}`;
     const persona = PERSONAS[personaId] || PERSONAS.hitesh;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
+    const welcomeMsgId = `welcome_${Date.now()}`;
 
     const newChat = {
       id: newId,
@@ -140,9 +141,9 @@ export function useChat(activePersonaId) {
       date: "Just now",
       messages: [
         {
-          id: `welcome_${Date.now()}`,
+          id: welcomeMsgId,
           role: "assistant",
-          text: persona.welcomeMessage,
+          text: "",
           avatar: persona.avatar,
           timestamp,
         },
@@ -152,6 +153,15 @@ export function useChat(activePersonaId) {
     setChats((prev) => [newChat, ...prev]);
     setActiveChatId(newId);
     setInputValue("");
+
+    // Trigger dynamic greeting generation
+    const greetingTrigger = [
+      {
+        role: "user",
+        content: "Hello! Please introduce yourself, say a warm hello, and ask me what we are coding today.",
+      },
+    ];
+    runApiStream(newId, welcomeMsgId, personaId, greetingTrigger);
   };
 
   // Clear current active chat history
@@ -160,6 +170,7 @@ export function useChat(activePersonaId) {
 
     const persona = PERSONAS[personaId] || PERSONAS.hitesh;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
+    const welcomeMsgId = `welcome_${Date.now()}`;
 
     setChats((prev) =>
       prev.map((c) => {
@@ -169,9 +180,9 @@ export function useChat(activePersonaId) {
             title: `Cleared session`,
             messages: [
               {
-                id: `welcome_${Date.now()}`,
+                id: welcomeMsgId,
                 role: "assistant",
-                text: persona.welcomeMessage,
+                text: "",
                 avatar: persona.avatar,
                 timestamp,
               },
@@ -183,6 +194,15 @@ export function useChat(activePersonaId) {
     );
     setInputValue("");
     abortActiveGeneration();
+
+    // Trigger dynamic greeting generation
+    const greetingTrigger = [
+      {
+        role: "user",
+        content: "Hello! Please introduce yourself, say a warm hello, and ask me what we are coding today.",
+      },
+    ];
+    runApiStream(activeChatId, welcomeMsgId, personaId, greetingTrigger);
   };
 
   const formatMessagesForClaude = (chatMessages) => {
