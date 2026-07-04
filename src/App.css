@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent-purple: #c084fc;
+  --color-accent-green: #4ade80;
+  --color-accent-pink: #f472b6;
+  --color-accent-blue: #60a5fa;
+}
+
+:root {
+  --accent-color: #c084fc;
+  --accent-glow: rgba(192, 132, 252, 0.35);
+  --bg-gradient-start: #06060c;
+  --bg-gradient-end: #010103;
+}
+
+.theme-purple {
+  --accent-color: #c084fc;
+  --accent-glow: rgba(192, 132, 252, 0.4);
+}
+
+.theme-green {
+  --accent-color: #4ade80;
+  --accent-glow: rgba(74, 222, 128, 0.4);
+}
+
+.theme-pink {
+  --accent-color: #f472b6;
+  --accent-glow: rgba(244, 114, 182, 0.4);
+}
+
+.theme-blue {
+  --accent-color: #60a5fa;
+  --accent-glow: rgba(96, 165, 250, 0.4);
+}
+
+body {
+  background-color: var(--bg-gradient-start);
+  color: #f3f4f6;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Beautiful dynamic neon grid background */
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Accent lighting effects */
+.accent-glow-bg {
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.5s ease, opacity 0.5s ease;
+}
+
+/* Floating custom animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(13, 13, 23, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card-interactive {
+  background: rgba(13, 13, 23, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 30px -10px var(--accent-glow);
+}
+
+.accent-border-hover:hover {
+  border-color: var(--accent-color);
+}
+
+/* Dynamic Accent styles for CSS properties not easily covered by Tailwind variables */
+.text-accent-dynamic {
+  color: var(--accent-color);
+  transition: color 0.3s ease;
+}
+
+.bg-accent-dynamic {
+  background-color: var(--accent-color);
+  transition: background-color 0.3s ease;
+}
+
+.border-accent-dynamic {
+  border-color: var(--accent-color);
+  transition: border-color 0.3s ease;
+}
+
+.shadow-accent-glow {
+  box-shadow: 0 0 20px 2px var(--accent-glow);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Styled Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06060c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
