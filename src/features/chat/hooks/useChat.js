@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { getMockResponse, PERSONAS } from "../api/mockChatApi";
+import { PERSONAS } from "../api/mockChatApi";
+import { streamClaudeResponse } from "../api/claudeApi";
 
 // Synchronize state with URL search parameters
 function getChatIdFromUrl() {
@@ -78,8 +79,16 @@ export function useChat(activePersonaId) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [inputValue, setInputValue] = useState("");
   
-  // Track dynamic intervals to prevent layout memory leaks
-  const streamIntervalRef = useRef(null);
+  // Track dynamic abort controllers to cancel active requests
+  const abortControllerRef = useRef(null);
+
+  const abortActiveGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsGenerating(false);
+  };
 
   // Sync state back to LocalStorage whenever chats update
   useEffect(() => {
@@ -92,10 +101,7 @@ export function useChat(activePersonaId) {
     setChatIdInUrl(id);
     
     // Clear any running generation if we swap channels
-    if (streamIntervalRef.current) {
-      clearInterval(streamIntervalRef.current);
-      setIsGenerating(false);
-    }
+    abortActiveGeneration();
   };
 
   // Sync back if user uses browser Back/Forward navigation
@@ -110,10 +116,12 @@ export function useChat(activePersonaId) {
     return () => window.removeEventListener("popstate", handlePopState);
   }, [activeChatId]);
 
-  // Clean up timers on unmount
+  // Clean up on unmount
   useEffect(() => {
     return () => {
-      if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, []);
 
@@ -174,13 +182,81 @@ export function useChat(activePersonaId) {
       })
     );
     setInputValue("");
-    if (streamIntervalRef.current) {
-      clearInterval(streamIntervalRef.current);
-      setIsGenerating(false);
+    abortActiveGeneration();
+  };
+
+  const formatMessagesForClaude = (chatMessages) => {
+    const formatted = chatMessages
+      .filter((m) => m.text && m.text.trim()) // skip empty text/placeholders
+      .map((m) => ({
+        role: m.role,
+        content: m.text,
+      }));
+
+    // Claude API requires that the first message must be a user message
+    if (formatted.length > 0 && formatted[0].role === "assistant") {
+      formatted.shift();
+    }
+    return formatted;
+  };
+
+  const runApiStream = async (targetChatId, assistantMsgId, personaId, apiMessages) => {
+    setIsGenerating(true);
+    abortActiveGeneration();
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    try {
+      const stream = await streamClaudeResponse(personaId, apiMessages, controller.signal);
+      let streamedText = "";
+
+      for await (const chunk of stream) {
+        streamedText += chunk;
+        setChats((prev) =>
+          prev.map((c) => {
+            if (c.id === targetChatId) {
+              return {
+                ...c,
+                messages: c.messages.map((m) =>
+                  m.id === assistantMsgId ? { ...m, text: streamedText } : m
+                ),
+              };
+            }
+            return c;
+          })
+        );
+      }
+    } catch (error) {
+      if (error.name === "AbortError" || (error.message && error.message.includes("abort"))) {
+        // Ignored, user canceled/reset the generation
+        return;
+      }
+      console.error("Claude API Error:", error);
+      const errorMessage = `Error: ${error.message || "Failed to generate response. Please check your CLAUDE_API_KEY in your .env file."}`;
+      
+      setChats((prev) =>
+        prev.map((c) => {
+          if (c.id === targetChatId) {
+            return {
+              ...c,
+              messages: c.messages.map((m) =>
+                m.id === assistantMsgId ? { ...m, text: errorMessage } : m
+              ),
+            };
+          }
+          return c;
+        })
+      );
+    } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+        setIsGenerating(false);
+      }
     }
   };
 
-  // Submit prompt and trigger word-by-word streaming animation
+  // Submit prompt and trigger live Claude API stream
   const sendMessage = (text, personaId) => {
     if (!text.trim() || isGenerating) return;
 
@@ -228,40 +304,11 @@ export function useChat(activePersonaId) {
       })
     );
 
-    setIsGenerating(true);
     setInputValue("");
 
-    // Simulate thinking delay before streaming
-    setTimeout(() => {
-      const fullResponse = getMockResponse(personaId, text);
-      const words = fullResponse.split(" ");
-      let currentWordIndex = 0;
-      let streamedText = "";
-
-      streamIntervalRef.current = setInterval(() => {
-        if (currentWordIndex < words.length) {
-          streamedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
-          
-          setChats((prev) =>
-            prev.map((c) => {
-              if (c.id === targetChatId) {
-                return {
-                  ...c,
-                  messages: c.messages.map((m) =>
-                    m.id === assistantMsgId ? { ...m, text: streamedText } : m
-                  ),
-                };
-              }
-              return c;
-            })
-          );
-          currentWordIndex++;
-        } else {
-          clearInterval(streamIntervalRef.current);
-          setIsGenerating(false);
-        }
-      }, 50); // 50ms per word streaming speed
-    }, 600); // 600ms latency simulation
+    // Gather history and format for Claude API
+    const apiMessages = formatMessagesForClaude([...activeChat.messages, userMsg]);
+    runApiStream(targetChatId, assistantMsgId, personaId, apiMessages);
   };
 
   const editMessage = (messageId, newText, personaId) => {
@@ -311,39 +358,12 @@ export function useChat(activePersonaId) {
       })
     );
 
-    setIsGenerating(true);
-
-    if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
-
-    setTimeout(() => {
-      const fullResponse = getMockResponse(personaId, newText);
-      const words = fullResponse.split(" ");
-      let currentWordIndex = 0;
-      let streamedText = "";
-
-      streamIntervalRef.current = setInterval(() => {
-        if (currentWordIndex < words.length) {
-          streamedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
-          setChats((prev) =>
-            prev.map((c) => {
-              if (c.id === targetChatId) {
-                return {
-                  ...c,
-                  messages: c.messages.map((m) =>
-                    m.id === assistantMsgId ? { ...m, text: streamedText } : m
-                  ),
-                };
-              }
-              return c;
-            })
-          );
-          currentWordIndex++;
-        } else {
-          clearInterval(streamIntervalRef.current);
-          setIsGenerating(false);
-        }
-      }, 50);
-    }, 600);
+    // Format truncated history plus the updated user message for Claude API
+    const apiMessages = formatMessagesForClaude([
+      ...activeChat.messages.slice(0, messageIndex),
+      updatedUserMsg,
+    ]);
+    runApiStream(targetChatId, assistantMsgId, personaId, apiMessages);
   };
 
   const regenerateMessage = (messageId, personaId) => {
@@ -362,8 +382,6 @@ export function useChat(activePersonaId) {
     // Retrieve preceding user prompt
     const userIndex = assistantIndex - 1;
     if (userIndex < 0 || activeChat.messages[userIndex].role !== "user") return;
-
-    const userPrompt = activeChat.messages[userIndex].text;
 
     const assistantMsgId = `a_${Date.now()}`;
     const timestamp = new Date().toTimeString().split(" ")[0].slice(0, 5);
@@ -393,46 +411,15 @@ export function useChat(activePersonaId) {
       })
     );
 
-    setIsGenerating(true);
-
-    if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
-
-    setTimeout(() => {
-      const fullResponse = getMockResponse(personaId, userPrompt);
-      const words = fullResponse.split(" ");
-      let currentWordIndex = 0;
-      let streamedText = "";
-
-      streamIntervalRef.current = setInterval(() => {
-        if (currentWordIndex < words.length) {
-          streamedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
-          setChats((prev) =>
-            prev.map((c) => {
-              if (c.id === targetChatId) {
-                return {
-                  ...c,
-                  messages: c.messages.map((m) =>
-                    m.id === assistantMsgId ? { ...m, text: streamedText } : m
-                  ),
-                };
-              }
-              return c;
-            })
-          );
-          currentWordIndex++;
-        } else {
-          clearInterval(streamIntervalRef.current);
-          setIsGenerating(false);
-        }
-      }, 50);
-    }, 600);
+    // Format history up to the user query for Claude API
+    const apiMessages = formatMessagesForClaude(
+      activeChat.messages.slice(0, assistantIndex)
+    );
+    runApiStream(targetChatId, assistantMsgId, personaId, apiMessages);
   };
 
   const deleteChat = (chatId) => {
-    if (streamIntervalRef.current) {
-      clearInterval(streamIntervalRef.current);
-      setIsGenerating(false);
-    }
+    abortActiveGeneration();
 
     setChats((prev) => {
       const filtered = prev.filter((c) => c.id !== chatId);

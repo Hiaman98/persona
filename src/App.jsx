@@ -24,7 +24,6 @@ export default function App() {
     inputValue,
     setInputValue,
     createNewChat,
-    resetChat,
     sendMessage,
     editMessage,
     regenerateMessage,
