@@ -1,110 +1,102 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent-purple: #c084fc;
-  --color-accent-green: #4ade80;
-  --color-accent-pink: #f472b6;
-  --color-accent-blue: #60a5fa;
+  --color-accent-purple: #a855f7;
+  --color-accent-green: #22c55e;
+  --color-accent-pink: #ec4899;
+  --color-accent-blue: #3b82f6;
 }
 
 :root {
-  --accent-color: #c084fc;
-  --accent-glow: rgba(192, 132, 252, 0.35);
-  --bg-gradient-start: #06060c;
+  --accent-color: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.2);
+  --bg-gradient-start: #040408;
   --bg-gradient-end: #010103;
 }
 
 .theme-purple {
-  --accent-color: #c084fc;
-  --accent-glow: rgba(192, 132, 252, 0.4);
+  --accent-color: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.2);
 }
 
 .theme-green {
-  --accent-color: #4ade80;
-  --accent-glow: rgba(74, 222, 128, 0.4);
+  --accent-color: #22c55e;
+  --accent-glow: rgba(34, 197, 94, 0.2);
 }
 
 .theme-pink {
-  --accent-color: #f472b6;
-  --accent-glow: rgba(244, 114, 182, 0.4);
+  --accent-color: #ec4899;
+  --accent-glow: rgba(236, 72, 153, 0.2);
 }
 
 .theme-blue {
-  --accent-color: #60a5fa;
-  --accent-glow: rgba(96, 165, 250, 0.4);
+  --accent-color: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.2);
 }
 
 body {
   background-color: var(--bg-gradient-start);
   color: #f3f4f6;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  overflow-x: hidden;
-  min-height: 100vh;
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
 }
 
-/* Beautiful dynamic neon grid background */
+/* cybernetic digital grid */
 .cyber-grid {
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-/* Accent lighting effects */
+/* Background Glowing Accents */
 .accent-glow-bg {
   background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  filter: blur(80px);
+  filter: blur(100px);
   pointer-events: none;
   z-index: 0;
-  transition: background 0.5s ease, opacity 0.5s ease;
+  transition: background 0.5s ease;
 }
 
-/* Floating custom animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.35; }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-}
-
-/* Glassmorphism utility */
+/* Glassmorphism panels */
 .glass-panel {
-  background: rgba(13, 13, 23, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(10, 10, 18, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.glass-card-interactive {
-  background: rgba(13, 13, 23, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.glass-card-interactive:hover {
-  transform: translateY(-4px);
+/* Messages styling */
+.user-bubble {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom-right-radius: 4px;
+}
+
+.user-bubble:hover {
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 30px -10px var(--accent-glow);
 }
 
-.accent-border-hover:hover {
-  border-color: var(--accent-color);
+.assistant-bubble {
+  background: rgba(10, 10, 18, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom-left-radius: 4px;
 }
 
-/* Dynamic Accent styles for CSS properties not easily covered by Tailwind variables */
+.assistant-bubble:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Dynamic Accent Styles */
 .text-accent-dynamic {
   color: var(--accent-color);
   transition: color 0.3s ease;
@@ -121,24 +113,43 @@ body {
 }
 
 .shadow-accent-glow {
-  box-shadow: 0 0 20px 2px var(--accent-glow);
+  box-shadow: 0 0 25px 2px var(--accent-glow);
   transition: box-shadow 0.3s ease;
 }
 
-/* Styled Scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
+/* Webkit Scrollbars for scrolling lists */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-::-webkit-scrollbar-track {
-  background: #06060c;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--accent-color);
+}
+
+/* Typing indicator pulses */
+@keyframes typing-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.typing-dot {
+  animation: typing-pulse 1.2s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
 }
