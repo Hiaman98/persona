@@ -23,6 +23,9 @@ export default function App() {
     createNewChat,
     resetChat,
     sendMessage,
+    editMessage,
+    regenerateMessage,
+    deleteChat,
   } = useChat(theme);
 
   // Local shell UI state (not tied to logic)
