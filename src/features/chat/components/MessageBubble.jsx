@@ -25,9 +25,65 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
     setIsEditing(false);
   };
 
+  // Helper parser to render bold, inline code, and code blocks beautifully
+  const formatMessageText = (text) => {
+    if (!text) return "";
+
+    const parts = text.split(/(```[\s\S]*?```)/g);
+
+    return parts.map((part, index) => {
+      if (part.startsWith("```")) {
+        const match = part.match(/```(\w*)\n([\s\S]*?)```/);
+        const language = match ? match[1] : "";
+        const code = match ? match[2] : part.slice(3, -3);
+
+        return (
+          <div key={index} className="my-3 rounded-xl overflow-hidden border border-[var(--border-color)]/60 bg-black/10 font-mono text-[11px] shadow-sm select-text">
+            {language && (
+              <div className="bg-black/15 px-4 py-1 text-[9px] uppercase tracking-wider text-gray-500 border-b border-[var(--border-color)]/30 font-bold select-none">
+                {language}
+              </div>
+            )}
+            <pre className="p-4 overflow-x-auto text-accent-dynamic leading-relaxed">
+              <code>{code}</code>
+            </pre>
+          </div>
+        );
+      }
+
+      // Inline highlights (`code` and **bold**)
+      const inlineParts = part.split(/(`[^`]+`)/g);
+
+      const formattedInline = inlineParts.map((subpart, subIndex) => {
+        if (subpart.startsWith("`") && subpart.endsWith("`")) {
+          return (
+            <code key={subIndex} className="bg-black/5 text-accent-dynamic px-1.5 py-0.5 rounded font-mono text-xs border border-[var(--border-color)]/10 mx-0.5 select-all">
+              {subpart.slice(1, -1)}
+            </code>
+          );
+        }
+
+        // Bold tags split
+        const boldParts = subpart.split(/(\*\*[^*]+\*\*)/g);
+        return boldParts.map((boldPart, boldIndex) => {
+          if (boldPart.startsWith("**") && boldPart.endsWith("**")) {
+            return (
+              <strong key={boldIndex} className="font-bold text-[var(--text-main)]">
+                {boldPart.slice(2, -2)}
+              </strong>
+            );
+          }
+          return boldPart;
+        });
+      });
+
+      return <span key={index}>{formattedInline}</span>;
+    });
+  };
+
   return (
     <div
-      className={`flex gap-4 max-w-[85%] relative group/bubble ${
+      className={`flex items-start gap-4 max-w-[85%] relative group/bubble ${
         isUser ? "ml-auto flex-row-reverse" : "mr-auto"
       }`}
     >
@@ -35,8 +91,8 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
       <div
         className={`h-8 w-8 rounded-lg shrink-0 flex items-center justify-center font-mono font-bold text-xs select-none shadow-sm ${
           isUser
-            ? "bg-white/10 border border-white/15 text-white"
-            : "bg-accent-dynamic text-black shadow-accent-glow"
+            ? "bg-[var(--avatar-user-bg)] border border-[var(--border-color)] text-[var(--avatar-user-text)]"
+            : "bg-[var(--avatar-assistant-bg)] text-[var(--avatar-assistant-text)] shadow-accent-glow"
         }`}
       >
         {isUser ? "U" : "A"}
@@ -50,21 +106,21 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
             <textarea
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
-              className="w-full bg-[#08080f] border border-accent-dynamic/40 focus:border-accent-dynamic rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-accent-dynamic/30 transition-all font-sans resize-none min-h-[80px]"
+              className="w-full bg-[var(--input-bg)] border border-accent-dynamic/40 focus:border-accent-dynamic rounded-xl px-4 py-3 text-sm text-[var(--text-main)] focus:outline-none focus:ring-1 focus:ring-accent-dynamic/30 transition-all font-sans resize-none min-h-[80px]"
               autoFocus
             />
             <div className="flex gap-2 justify-end text-xs font-mono">
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className="px-3 py-1.5 rounded-lg border border-white/5 hover:border-white/10 text-gray-400 hover:text-white bg-white/5 transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-lg border border-[var(--border-color)] text-gray-500 hover:text-[var(--text-main)] bg-[var(--reset-bg)] transition-colors cursor-pointer"
               >
                 CANCEL
               </button>
               <button
                 type="submit"
                 disabled={!editText.trim() || editText.trim() === message.text}
-                className="px-3 py-1.5 rounded-lg bg-accent-dynamic text-black hover:opacity-90 disabled:opacity-20 font-bold transition-all cursor-pointer disabled:cursor-not-allowed"
+                className="px-3 py-1.5 rounded-lg bg-accent-dynamic text-white hover:opacity-90 disabled:opacity-20 font-bold transition-all cursor-pointer disabled:cursor-not-allowed"
               >
                 SAVE & SUBMIT
               </button>
@@ -74,16 +130,16 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
           /* Plain Message Bubble Display */
           <div className="relative">
             <div
-              className={`p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                isUser ? "user-bubble text-white" : "assistant-bubble text-gray-300"
+              className={`p-4 rounded-2xl text-sm leading-relaxed ${
+                isUser ? "user-bubble" : "assistant-bubble"
               }`}
             >
-              {message.text}
+              {formatMessageText(message.text)}
             </div>
 
             {/* Bubble Action Controls: Shown on hover */}
             <div
-              className={`absolute top-2 flex items-center gap-1.5 opacity-0 group-hover/bubble:opacity-100 transition-opacity duration-200 z-10 px-2 py-1 rounded-lg bg-black/40 border border-white/5 backdrop-blur-sm ${
+              className={`absolute top-2 flex items-center gap-1.5 opacity-0 group-hover/bubble:opacity-100 transition-opacity duration-200 z-10 px-2 py-1 rounded-lg bg-[var(--bg-sidebar)] border border-[var(--border-color)] shadow-sm ${
                 isUser ? "right-full mr-2" : "left-full ml-2"
               }`}
             >
@@ -91,7 +147,7 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
                 /* Edit button for User */
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-gray-400 hover:text-white transition-colors p-1 cursor-pointer"
+                  className="text-gray-400 hover:text-[var(--text-main)] transition-colors p-1 cursor-pointer"
                   title="Edit prompt"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -103,7 +159,7 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
                 <>
                   <button
                     onClick={handleCopy}
-                    className="text-gray-400 hover:text-white transition-colors p-1 cursor-pointer"
+                    className="text-gray-400 hover:text-[var(--text-main)] transition-colors p-1 cursor-pointer"
                     title="Copy message content"
                   >
                     {copied ? (
@@ -121,7 +177,7 @@ export default function MessageBubble({ message, onEdit, onRegenerate }) {
                   {message.text && (
                     <button
                       onClick={() => onRegenerate?.(message.id)}
-                      className="text-gray-400 hover:text-white transition-colors p-1 cursor-pointer"
+                      className="text-gray-400 hover:text-[var(--text-main)] transition-colors p-1 cursor-pointer"
                       title="Regenerate reply"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

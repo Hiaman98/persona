@@ -12,8 +12,8 @@
   
   --bubble-user: #ebdcf7;          /* Soft Lilac Bubble */
   --bubble-user-border: #dfc9f2;
-  --bubble-assistant: transparent;  /* Transparent Assistant text */
-  --bubble-assistant-border: transparent;
+  --bubble-assistant: #f5eeff;     /* Slightly Lighter Lavender Purple */
+  --bubble-assistant-border: #e8dcf7;
   
   --avatar-user-bg: #f3e8ff;
   --avatar-user-text: #2e1065;
@@ -37,8 +37,8 @@
   
   --bubble-user: rgba(168, 85, 247, 0.12); /* Translucent Neon Bubble */
   --bubble-user-border: rgba(168, 85, 247, 0.25);
-  --bubble-assistant: rgba(255, 255, 255, 0.02); /* Very subtle transparent gray */
-  --bubble-assistant-border: rgba(255, 255, 255, 0.04);
+  --bubble-assistant: rgba(168, 85, 247, 0.05); /* Soft Translucent purple bubble */
+  --bubble-assistant-border: rgba(168, 85, 247, 0.15);
   
   --avatar-user-bg: rgba(255, 255, 255, 0.1);
   --avatar-user-text: #f3f4f6;
@@ -115,6 +115,7 @@ body {
   color: var(--text-main);
   border: 1px solid var(--bubble-assistant-border);
   border-bottom-left-radius: 4px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 /* Dynamic Accent Styles mapping to active theme variables */
