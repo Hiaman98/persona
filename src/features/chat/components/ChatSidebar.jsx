@@ -7,6 +7,7 @@ export default function ChatSidebar({
   activeChatId,
   setActiveChatId,
   onNewChat,
+  onDeleteChat,
 }) {
   const { theme, setTheme } = useTheme();
 
@@ -62,18 +63,36 @@ export default function ChatSidebar({
           </p>
         ) : (
           chats.map((c) => (
-            <button
+            <div
               key={c.id}
-              onClick={() => setActiveChatId(c.id)}
-              className={`w-full text-left rounded-xl py-2.5 px-3 transition-all flex flex-col gap-0.5 cursor-pointer ${
-                activeChatId === c.id
-                  ? "bg-white/5 border border-white/5 text-accent-dynamic shadow-sm"
-                  : "hover:bg-white/5 text-gray-400 border border-transparent"
-              }`}
+              className="group/item relative w-full flex items-center"
             >
-              <span className="text-xs font-medium truncate text-white">{c.title}</span>
-              <span className="text-[10px] font-mono text-gray-500">{c.date}</span>
-            </button>
+              <button
+                onClick={() => setActiveChatId(c.id)}
+                className={`w-full text-left rounded-xl py-2.5 pl-3 pr-8 transition-all flex flex-col gap-0.5 cursor-pointer border ${
+                  activeChatId === c.id
+                    ? "bg-white/5 border-white/5 text-accent-dynamic shadow-sm"
+                    : "hover:bg-white/5 text-gray-400 border-transparent"
+                }`}
+              >
+                <span className="text-xs font-medium truncate text-white">{c.title}</span>
+                <span className="text-[10px] font-mono text-gray-500">{c.date}</span>
+              </button>
+
+              {/* Session Delete Trigger */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteChat?.(c.id);
+                }}
+                className="absolute right-2.5 opacity-0 group-hover/item:opacity-100 p-1.5 text-gray-500 hover:text-red-400 transition-all rounded hover:bg-white/10 cursor-pointer"
+                title="Delete chat session"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+              </button>
+            </div>
           ))
         )}
       </div>

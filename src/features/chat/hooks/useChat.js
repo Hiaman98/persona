@@ -421,6 +421,27 @@ export function useChat(activePersonaId) {
     }, 600);
   };
 
+  const deleteChat = (chatId) => {
+    if (streamIntervalRef.current) {
+      clearInterval(streamIntervalRef.current);
+      setIsGenerating(false);
+    }
+
+    setChats((prev) => {
+      const filtered = prev.filter((c) => c.id !== chatId);
+      
+      // If active chat is deleted, swap active selection to fallback chat or spawn a fresh session
+      if (chatId === activeChatId) {
+        if (filtered.length > 0) {
+          setTimeout(() => setActiveChatId(filtered[0].id), 0);
+        } else {
+          setTimeout(() => createNewChat(activePersonaId), 0);
+        }
+      }
+      return filtered;
+    });
+  };
+
   return {
     chats,
     activeChatId,
@@ -434,5 +455,6 @@ export function useChat(activePersonaId) {
     sendMessage,
     editMessage,
     regenerateMessage,
+    deleteChat,
   };
 }

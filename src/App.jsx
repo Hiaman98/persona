@@ -44,6 +44,7 @@ export default function App() {
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
         onNewChat={() => createNewChat(theme)}
+        onDeleteChat={deleteChat}
       />
 
       {/* Main chat execution feed */}
