@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "@/context/ThemeContext";
 import { useChat } from "@/features/chat/hooks/useChat";
 import { PERSONAS } from "@/features/chat/api/mockChatApi";
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
@@ -8,6 +9,8 @@ import ChatInput from "@/features/chat/components/ChatInput";
 import "./App.css";
 
 export default function App() {
+  const { theme } = useTheme();
+  
   // Model state (activePersonaId): coder | shell | creative | generalist
   const [activePersonaId, setActivePersonaId] = useState("coder");
 
@@ -34,7 +37,7 @@ export default function App() {
   const activePersona = PERSONAS[activePersonaId] || PERSONAS.coder;
 
   return (
-    <div className="theme-purple h-screen w-full bg-[var(--bg-primary)] flex overflow-hidden relative text-[var(--text-main)] font-sans">
+    <div className={`theme-${theme} h-screen w-full bg-[var(--bg-primary)] flex overflow-hidden relative text-[var(--text-main)] font-sans`}>
       {/* Soft Purple Background Glowing Disk */}
       <div className="absolute top-10 left-10 w-96 h-96 accent-glow-bg opacity-40"></div>
 

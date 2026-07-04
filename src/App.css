@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* LIGHT MODE (Blueberry Lavender) - Default */
   --accent-color: #6d28d9;         /* Vibrant Blueberry Purple */
   --accent-glow: rgba(109, 40, 217, 0.12);
   --bg-primary: #faf8fd;           /* Pale Lilac/Lavender White */
@@ -8,6 +9,45 @@
   --text-main: #2e1065;            /* Dark Grape/Charcoal Purple */
   --text-secondary: #6d28d9;       /* Blueberry Purple */
   --border-color: #e2d5f0;         /* Soft Lavender Border line */
+  
+  --bubble-user: #ebdcf7;          /* Soft Lilac Bubble */
+  --bubble-user-border: #dfc9f2;
+  --bubble-assistant: transparent;  /* Transparent Assistant text */
+  --bubble-assistant-border: transparent;
+  
+  --avatar-user-bg: #f3e8ff;
+  --avatar-user-text: #2e1065;
+  --avatar-assistant-bg: #6d28d9;
+  --avatar-assistant-text: #ffffff;
+  
+  --input-bg: #ffffff;
+  --header-bg: rgba(250, 248, 253, 0.7);
+  --reset-bg: rgba(255, 255, 255, 0.4);
+}
+
+.theme-dark {
+  /* DARK MODE (Cyberpunk Midnight Purple) */
+  --accent-color: #a855f7;         /* Radiant Neon Violet */
+  --accent-glow: rgba(168, 85, 247, 0.25);
+  --bg-primary: #05020c;           /* Deep Space Black */
+  --bg-sidebar: #0b0616;           /* Dark Velvet Purple-Black Sidebar */
+  --text-main: #f3f4f6;            /* Warm Off-White Text */
+  --text-secondary: #c084fc;       /* Neon Lilac */
+  --border-color: #271442;         /* Dark Purple Border line */
+  
+  --bubble-user: rgba(168, 85, 247, 0.12); /* Translucent Neon Bubble */
+  --bubble-user-border: rgba(168, 85, 247, 0.25);
+  --bubble-assistant: rgba(255, 255, 255, 0.02); /* Very subtle transparent gray */
+  --bubble-assistant-border: rgba(255, 255, 255, 0.04);
+  
+  --avatar-user-bg: rgba(255, 255, 255, 0.1);
+  --avatar-user-text: #f3f4f6;
+  --avatar-assistant-bg: #a855f7;
+  --avatar-assistant-text: #ffffff;
+  
+  --input-bg: #0d081b;
+  --header-bg: rgba(5, 2, 12, 0.7);
+  --reset-bg: rgba(255, 255, 255, 0.04);
 }
 
 body {
@@ -17,9 +57,10 @@ body {
   overflow: hidden;
   height: 100vh;
   margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Styled Scrollbars matching lavender */
+/* Styled Scrollbars */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -30,7 +71,7 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #dbceed;
+  background: var(--border-color);
   border-radius: 4px;
 }
 
@@ -38,45 +79,45 @@ body {
   background: var(--accent-color);
 }
 
-/* Sidebar layout classes */
+/* Layout panel bounds using variables */
 .glass-panel {
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Active Session item */
 .sidebar-item-active {
-  background-color: #e5d5f2;
+  background-color: var(--bubble-user);
   color: var(--accent-color) !important;
   font-weight: 600;
-  border: 1px solid rgba(109, 40, 217, 0.15);
+  border: 1px solid var(--bubble-user-border);
 }
 
 /* Sidebar item hover */
 .sidebar-item-hover:hover {
-  background-color: #ece0f6;
+  background-color: var(--bubble-user);
   color: var(--text-main);
+  opacity: 0.85;
 }
 
 /* Message Bubble Colors */
 .user-bubble {
-  background-color: #ebdcf7;
+  background-color: var(--bubble-user);
   color: var(--text-main);
-  border: 1px solid #dfc9f2;
+  border: 1px solid var(--bubble-user-border);
   border-bottom-right-radius: 4px;
-}
-
-.user-bubble:hover {
-  background-color: #dfc9f2;
+  transition: background-color 0.2s ease;
 }
 
 .assistant-bubble {
-  background-color: transparent;
+  background-color: var(--bubble-assistant);
   color: var(--text-main);
+  border: 1px solid var(--bubble-assistant-border);
   border-bottom-left-radius: 4px;
 }
 
-/* Dynamic Accent Styles mapping to purple variables */
+/* Dynamic Accent Styles mapping to active theme variables */
 .text-accent-dynamic {
   color: var(--accent-color);
   transition: color 0.2s ease;
@@ -93,10 +134,11 @@ body {
 }
 
 .shadow-accent-glow {
-  box-shadow: 0 0 15px var(--accent-glow);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transition: box-shadow 0.2s ease;
 }
 
-/* Typing pulse animation */
+/* Typing pulse keyframe loader */
 @keyframes dot-pulse {
   0%, 100% { opacity: 0.3; transform: translateY(0); }
   50% { opacity: 1; transform: translateY(-4px); }

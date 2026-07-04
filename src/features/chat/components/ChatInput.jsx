@@ -16,7 +16,7 @@ export default function ChatInput({
   };
 
   return (
-    <footer className="p-4 bg-gradient-to-t from-white/40 to-transparent shrink-0 bg-[#fbfaf7]">
+    <footer className="p-4 shrink-0 bg-[var(--bg-primary)] border-t border-[var(--border-color)]/20">
       <div className="max-w-3xl mx-auto">
         <form
           onSubmit={(e) => {
@@ -25,7 +25,7 @@ export default function ChatInput({
               onSubmit(e);
             }
           }}
-          className="bg-white border border-[#e6e2d8] focus-within:border-accent-dynamic rounded-full px-5 py-1.5 flex items-center gap-2 transition-all shadow-sm"
+          className="bg-[var(--input-bg)] border border-[var(--border-color)] focus-within:border-accent-dynamic rounded-full px-5 py-1.5 flex items-center gap-2 transition-all shadow-sm"
         >
           {/* Text Input area matching screenshot placeholder */}
           <textarea
@@ -53,7 +53,7 @@ export default function ChatInput({
 
         {/* Screenshot Style Footer metadata details */}
         <div className="flex items-center gap-3 mt-2 px-3 text-[10px] font-mono text-gray-400 select-none">
-          <div className="bg-white border border-[#e6e2d8] px-2.5 py-1 rounded-full text-gray-500 shadow-sm font-semibold">
+          <div className="bg-[var(--input-bg)] border border-[var(--border-color)] px-2.5 py-1 rounded-full text-[var(--text-main)] opacity-70 shadow-sm font-semibold">
             {activePersona?.name || "Antigravity-Coder"}
           </div>
           <span>Shift + Enter for new line</span>

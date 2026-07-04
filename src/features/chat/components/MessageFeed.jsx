@@ -40,7 +40,7 @@ export default function MessageFeed({
   }
 
   return (
-    <section className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar bg-[#fbfaf7]">
+    <section className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar bg-[var(--bg-primary)]">
       <div className="max-w-3xl mx-auto flex flex-col gap-6">
         {messages.map((msg) => (
           <MessageBubble

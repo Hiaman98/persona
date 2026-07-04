@@ -4,17 +4,22 @@ const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
-    // Read from localStorage to persist theme across sessions
-    return localStorage.getItem("persona-theme") || "purple";
+    // Check local storage for existing theme choice, default to light
+    return localStorage.getItem("persona-theme-mode") || "light";
   });
 
-  const setTheme = (newTheme) => {
-    setThemeState(newTheme);
-    localStorage.setItem("persona-theme", newTheme);
+  const setTheme = (mode) => {
+    const targetMode = mode === "dark" ? "dark" : "light";
+    setThemeState(targetMode);
+    localStorage.setItem("persona-theme-mode", targetMode);
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
