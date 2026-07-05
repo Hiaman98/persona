@@ -183,7 +183,7 @@ export function useChat() {
         return;
       }
       console.error("Claude API Error:", error);
-      const errorMessage = `Error: ${error.message || "Failed to generate response. Please check your CLAUDE_API_KEY in your .env file."}`;
+      const errorMessage = `Error: ${error.message || "Failed to generate response. Please check your VITE_CLAUDE_API_KEY in your .env file."}`;
       
       setChats((prev) =>
         prev.map((c) => {

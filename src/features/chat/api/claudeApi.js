@@ -1,9 +1,8 @@
-/* global process */
 import Anthropic from "@anthropic-ai/sdk";
 import { PERSONAS } from "./mockChatApi";
 
-// Retrieve the Claude API key from environment variables (defined via Vite config)
-const apiKey = process.env.CLAUDE_API_KEY || import.meta.env.VITE_CLAUDE_API_KEY;
+// Retrieve the Claude API key from environment variables (Vite-specific)
+const apiKey = import.meta.env.VITE_CLAUDE_API_KEY;
 
 /**
  * Streams Claude responses for a specific persona and conversation context.
@@ -14,7 +13,7 @@ const apiKey = process.env.CLAUDE_API_KEY || import.meta.env.VITE_CLAUDE_API_KEY
  */
 export async function* streamClaudeResponse(personaId, messages, signal) {
   if (!apiKey) {
-    throw new Error("CLAUDE_API_KEY is not defined. Please add it to your .env file.");
+    throw new Error("VITE_CLAUDE_API_KEY is not defined. Please add it to your .env file.");
   }
 
   const anthropic = new Anthropic({
