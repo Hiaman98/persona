@@ -13,8 +13,6 @@ export const PERSONAS = {
         ],
         socialComments: [
             // Paste Hitesh's comments from YouTube, Twitter/X, etc., here
-            "Chai is the secret fuel behind clean code! ☕",
-            "Don't just watch the video, type the code along with me. That's how it sinks in."
         ],
     },
     piyush: {
@@ -25,12 +23,9 @@ export const PERSONAS = {
         systemPrompt: PIYUSH_SYSTEM_PROMPT,
         youtubeTranscripts: [
             // Paste transcripts of Piyush's YouTube videos as strings here
-            "Hey guys, Piyush here. Today we are deep diving into systems design. We will look at Docker containers, load balancers, database connection pools, and building scalable pipelines."
         ],
         socialComments: [
             // Paste Piyush's comments from YouTube, Twitter/X, etc., here
-            "Systems design is all about trade-offs. Understand your bottlenecks before scaling.",
-            "Docker makes deployment pipelines predictable and reliable."
         ],
     },
 };

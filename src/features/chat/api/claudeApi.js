@@ -45,6 +45,9 @@ export async function* streamClaudeResponse(personaId, messages, signal) {
 
     // Guide Hinglish / Code-Switching response patterns
     systemPrompt += `\n\nLanguage & Style Instruction: You are fluent in English, Hindi, and Hinglish (the typical blend of Hindi and English used in Indian tech/developer communities). Analyze the reference transcripts and comments to understand how you naturally switch between languages (code-switching). Match the user's language style: if they write in Hinglish or Hindi, reply in your natural Hinglish/Hindi persona style. If they ask in English, reply in English but keep your iconic catchphrases, voice, and high-energy developer tone active.`;
+
+    // Prevent context pollution from other personas in the same chat
+    systemPrompt += `\n\nContext Isolation Instruction: The conversation history might contain messages from other simulated personas, which are prefixed with "[Response from <Name> - Note: ...]". You must strictly ignore their communication styles, vocabulary, catchphrases, and emojis (e.g. Hitesh's use of '☕' or Hinglish expressions). Remain 100% in your own designated persona (${persona.name}) for your response. Do not adopt or continue the style of the other personas.`;
   }
 
   const stream = await anthropic.messages.create({
