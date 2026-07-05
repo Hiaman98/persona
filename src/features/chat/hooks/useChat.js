@@ -20,7 +20,7 @@ function setChatIdInUrl(id) {
   window.history.pushState({}, "", url.toString());
 }
 
-export function useChat(activePersonaId) {
+export function useChat() {
   // Load initial chats from LocalStorage, fallback to empty array
   const [chats, setChats] = useState(() => {
     const saved = localStorage.getItem("persona-chats");
@@ -86,7 +86,7 @@ export function useChat(activePersonaId) {
   const messages = currentChat ? currentChat.messages : [];
 
   // Start new chat session
-  const createNewChat = (_personaId) => {
+  const createNewChat = () => {
     const newId = `chat_${Date.now()}`;
 
     const newChat = {
@@ -102,7 +102,7 @@ export function useChat(activePersonaId) {
   };
 
   // Clear current active chat history
-  const resetChat = (_personaId) => {
+  const resetChat = () => {
     if (!activeChatId) return;
 
     setChats((prev) =>
@@ -383,7 +383,7 @@ export function useChat(activePersonaId) {
         if (filtered.length > 0) {
           setTimeout(() => setActiveChatId(filtered[0].id), 0);
         } else {
-          setTimeout(() => createNewChat(activePersonaId), 0);
+          setTimeout(() => createNewChat(), 0);
         }
       }
       return filtered;
@@ -393,7 +393,7 @@ export function useChat(activePersonaId) {
   // Auto-initialize a chat session on first load if history is empty
   useEffect(() => {
     if (chats.length === 0) {
-      createNewChat(activePersonaId);
+      createNewChat();
     }
   }, []);
 

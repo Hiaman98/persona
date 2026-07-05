@@ -40,8 +40,8 @@ export default function ChatHeader({
           className="bg-[var(--input-bg)] border border-[var(--border-color)] text-xs font-semibold text-[var(--text-main)] rounded-full px-4 py-1.5 focus:outline-none cursor-pointer shadow-sm hover:border-accent-dynamic transition-all"
           title="Switch Educator Persona"
         >
-          <option value="hitesh">☕ Hitesh Choudhary (Chai aur Code)</option>
-          <option value="piyush">💻 Piyush Garg (System Design)</option>
+          <option value="hitesh">Hitesh Choudhary</option>
+          <option value="piyush">Piyush Garg</option>
         </select>
       </div>
     </header>

@@ -28,7 +28,7 @@ export default function App() {
     editMessage,
     regenerateMessage,
     deleteChat,
-  } = useChat(activePersonaId);
+  } = useChat();
 
   // Local shell UI state (not tied to logic)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -47,7 +47,7 @@ export default function App() {
         chats={chats}
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
-        onNewChat={() => createNewChat(activePersonaId)}
+        onNewChat={() => createNewChat()}
         onDeleteChat={deleteChat}
       />
 
