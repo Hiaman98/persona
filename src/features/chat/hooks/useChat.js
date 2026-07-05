@@ -20,54 +20,11 @@ function setChatIdInUrl(id) {
   window.history.pushState({}, "", url.toString());
 }
 
-const INITIAL_CHATS = [
-  {
-    id: "chat_1",
-    title: "Mastering Closures (Chai aur Code)",
-    date: "Just now",
-    messages: [
-      {
-        id: "m1",
-        role: "user",
-        text: "Hey Hitesh, I always get confused with closures. Can you explain in simple terms?",
-        timestamp: "18:24",
-      },
-      {
-        id: "m2",
-        role: "assistant",
-        text: "Hey what's up everyone, Hitesh here! Grab a hot cup of chai ☕ and let's break it down.\n\nA closure is simply a function that remembers its outer variables (lexical scope) even after the outer function has finished executing. Think of it like a memory capsule that the function carries around.\n\nLet's write a simple example:\n\n```javascript\nfunction makeChaiCounter() {\n  let count = 0; // local variable\n  return function() {\n    count++;\n    return `You have had ${count} cups of chai ☕`;\n  };\n}\n\nconst counter = makeChaiCounter();\nconsole.log(counter()); // \"You have had 1 cups of chai ☕\"\nconsole.log(counter()); // \"You have had 2 cups of chai ☕\"\n```\nSee? The inner function retains access to `count` even though `makeChaiCounter` has returned. Simple and clean! Go ahead and test it out.",
-        avatar: "HC",
-        timestamp: "18:25",
-      },
-    ],
-  },
-  {
-    id: "chat_2",
-    title: "Node.js Rate Limiter (Piyush Garg)",
-    date: "2 hours ago",
-    messages: [
-      {
-        id: "m3",
-        role: "user",
-        text: "Piyush, how do we implement a robust rate-limiting middleware in Express?",
-        timestamp: "16:10",
-      },
-      {
-        id: "m4",
-        role: "assistant",
-        text: "Hey guys, welcome back. Rate limiting is crucial for preventing DDoS and brute force attacks in production. In Express, we can use `express-rate-limit` or write a custom middleware powered by Redis for distributed systems.\n\nHere is a clean custom middleware snippet using memory cache:\n\n```javascript\nconst rateLimit = {};\n\nexport const rateLimiter = (limit, windowMs) => {\n  return (req, res, next) => {\n    const ip = req.ip;\n    if (!rateLimit[ip]) {\n      rateLimit[ip] = { count: 0, startTime: Date.now() };\n    }\n\n    const data = rateLimit[ip];\n    if (Date.now() - data.startTime > windowMs) {\n      data.count = 1;\n      data.startTime = Date.now();\n      return next();\n    }\n\n    data.count++;\n    if (data.count > limit) {\n      return res.status(429).json({\n        error: 'Too many requests. Please try again later.'\n      });\n    }\n    next();\n  };\n};\n```\n\nFor high-scale apps, we'd replace the in-memory object `rateLimit` with Redis commands like `MULTI`, `INCR`, and `EXPIRE`. Let me know if you want to implement the Redis approach!",
-        avatar: "PG",
-        timestamp: "16:11",
-      },
-    ],
-  },
-];
-
 export function useChat(activePersonaId) {
-  // Load initial chats from LocalStorage, fallback to standard mock chats
+  // Load initial chats from LocalStorage, fallback to empty array
   const [chats, setChats] = useState(() => {
     const saved = localStorage.getItem("persona-chats");
-    return saved ? JSON.parse(saved) : INITIAL_CHATS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [activeChatId, setActiveChatIdState] = useState(() => {
@@ -455,6 +412,13 @@ export function useChat(activePersonaId) {
       return filtered;
     });
   };
+
+  // Auto-initialize a chat session on first load if history is empty
+  useEffect(() => {
+    if (chats.length === 0) {
+      createNewChat(activePersonaId);
+    }
+  }, []);
 
   return {
     chats,
